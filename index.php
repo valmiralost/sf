@@ -10,66 +10,71 @@ session_start();
     </head>
     <body>
         <tt>
-            <?php
+<?php
 
-            require_once ('PHPToolkit/soapclient/SforcePartnerClient.php');
-            require_once ('PHPToolkit/soapclient/SforceEnterpriseClient.php');
+    require_once ('PHPToolkit/soapclient/SforcePartnerClient.php');
+    require_once ('PHPToolkit/soapclient/SforceEnterpriseClient.php');
+    define("USERNAME", "***");
+    define("PASSWORD", "***");
+    define("SECURITY_TOKEN", "***");
+    ini_set("soap.wsdl_cache_enabled", "0"); 
 
-            define("USERNAME", "*****");
-            define("PASSWORD", "*****");
-            define("SECURITY_TOKEN", "******");
+
+    try {
+        echo "<table border=\"1\"><tr><td>";
+        echo "First with the enterprise client<br/><br/>\n";
+        $mySforceConnection = new SforceEnterpriseClient();
+        $mySforceConnection->createConnection("PHPToolkit/soapclient/enterprise.wsdl.xml");
+        // Simple example of session management - first call will do
+        // login, refresh will use session ID and location cached in
+        // PHP session
+        if (isset($_SESSION['enterpriseSessionId'])) {
+            $location = $_SESSION['enterpriseLocation'];
+            $sessionId = $_SESSION['enterpriseSessionId'];
+            $mySforceConnection->setEndpoint($location);
+            $mySforceConnection->setSessionHeader($sessionId);
+            echo "Used session ID for enterprise<br/><br/>\n";
+        } else {
+            $mySforceConnection->login(USERNAME, PASSWORD.SECURITY_TOKEN);
+            $_SESSION['enterpriseLocation'] = $mySforceConnection->getLocation();
+            $_SESSION['enterpriseSessionId'] = $mySforceConnection->getSessionId();
+            echo "Logged in with enterprise<br/><br/>\n";
+        }
+        /*
+        $query = "SELECT Id, FirstName, LastName, Phone from Contact";
+        $response = $mySforceConnection->query($query);
+        echo "Results of query '$query'<br/><br/>\n";
+        foreach ($response->records as $record) {
+            echo $record->Id.": ".$record->FirstName." "
+           .$record->LastName." ".$record->Phone."<br/>\n";
+        }
+        */
+        $query = "SELECT  ID,Date_Reported__c,Title__c FROM Product_Experience_Report__c";
+        $response = $mySforceConnection->query($query);
+        echo "Results of query '$query'<br/><br/>\n";
+        foreach ($response->records as $record) {
+            echo $record->Id.": ".$record->Title__c." "
+           .$record->Date_Reported__c."<br/>\n";
+        }
 
 
-            try {
-                echo "<table border=\"1\"><tr><td>";
-                echo "First with the enterprise client<br/><br/>\n";
+       
+        echo "</td></tr></table>";
+    } catch (Exception $e) {
+        echo "Exception ".$e->faultstring."<br/><br/>\n";
+        echo "Last Request:<br/><br/>\n";
+        echo $mySforceConnection->getLastRequestHeaders();
+        echo "<br/><br/>\n";
+        echo $mySforceConnection->getLastRequest();
+        echo "<br/><br/>\n";
+        echo "Last Response:<br/><br/>\n";
+        echo $mySforceConnection->getLastResponseHeaders();
+        echo "<br/><br/>\n";
+        echo $mySforceConnection->getLastResponse();
+    }
 
-                $mySforceConnection = new SforceEnterpriseClient();
-                $mySforceConnection->createConnection("PHPToolkit/soapclient/enterprise.wsdl.xml");
-                // Simple example of session management - first call will do
-                // login, refresh will use session ID and location cached in
-                // PHP session
-                if (isset($_SESSION['enterpriseSessionId'])) {
-                    $location = $_SESSION['enterpriseLocation'];
-                    $sessionId = $_SESSION['enterpriseSessionId'];
 
-                    $mySforceConnection->setEndpoint($location);
-                    $mySforceConnection->setSessionHeader($sessionId);
 
-                    echo "Used session ID for enterprise<br/><br/>\n";
-                } else {
-                    $mySforceConnection->login(USERNAME, PASSWORD.SECURITY_TOKEN);
-
-                    $_SESSION['enterpriseLocation'] = $mySforceConnection->getLocation();
-                    $_SESSION['enterpriseSessionId'] = $mySforceConnection->getSessionId();
-
-                    echo "Logged in with enterprise<br/><br/>\n";
-                }
-
-                $query = "SELECT Id, FirstName, LastName, Phone from Contact";
-                $response = $mySforceConnection->query($query);
-
-                echo "Results of query '$query'<br/><br/>\n";
-                foreach ($response->records as $record) {
-                    echo $record->Id.": ".$record->FirstName." "
-                   .$record->LastName." ".$record->Phone."<br/>\n";
-                }
-
-               
-
-                echo "</td></tr></table>";
-            } catch (Exception $e) {
-                echo "Exception ".$e->faultstring."<br/><br/>\n";
-                echo "Last Request:<br/><br/>\n";
-                echo $mySforceConnection->getLastRequestHeaders();
-                echo "<br/><br/>\n";
-                echo $mySforceConnection->getLastRequest();
-                echo "<br/><br/>\n";
-                echo "Last Response:<br/><br/>\n";
-                echo $mySforceConnection->getLastResponseHeaders();
-                echo "<br/><br/>\n";
-                echo $mySforceConnection->getLastResponse();
-            }
             ?>
         </tt>
     </body>

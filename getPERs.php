@@ -14,10 +14,9 @@ session_start();
 
             require_once ('PHPToolkit/soapclient/SforcePartnerClient.php');
             require_once ('PHPToolkit/soapclient/SforceEnterpriseClient.php');
-
-            define("USERNAME", "*****");
-            define("PASSWORD", "*****");
-            define("SECURITY_TOKEN", "******");
+    define("USERNAME", "***");
+    define("PASSWORD", "***");
+    define("SECURITY_TOKEN", "***");
 
             try {
                 echo "<table border=\"1\"><tr><td>";
@@ -44,14 +43,27 @@ session_start();
 
                     echo "Logged in with enterprise<br/><br/>\n";
                 }
+/*
+                $query = "SELECT Id, FirstName, LastName, AccountId, Account.Name FROM Contact";
 
-                $query = "SELECT Patient__c, Account__c from Product_Experience_Report__c";
                 $response = $mySforceConnection->query($query);
 
                 echo "Results of query '$query'<br/><br/>\n";
                 foreach ($response->records as $record) {
-                 //   echo $record->Account__c .": ".$record->FirstName."<br/>\n";
-                    var_dump(get_object_vars($record));
+                     echo $record->FirstName. " " . $record->LastName;
+                     echo $record->Account->Name;
+                    echo "<br>";
+*/
+                $query = "SELECT  Account.Name FROM Product_Experience_Report__c";
+
+                $response = $mySforceConnection->query($query);
+
+                echo "Results of query '$query'<br/><br/>\n";
+                foreach ($response->records as $record) {
+                 //    echo $record->FirstName. " " . $record->LastName;
+                     echo $record->Account->Name;
+                    echo "<br>";
+                 
 
                 }
 
