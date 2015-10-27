@@ -2,9 +2,8 @@
 echo "start";
 // SOAP_CLIENT_BASEDIR - folder that contains the PHP Toolkit and your WSDL
 // $USERNAME - variable that contains your Salesforce.com username (must be in the form of an email)
-    define("USERNAME", "***");
-    define("PASSWORD", "***");
-    define("SECURITY_TOKEN", "***");
+$USERNAME = "***";
+$PASSWORD = "***";
 // $PASSWORD - variable that contains your Salesforce.com password
 define("SOAP_CLIENT_BASEDIR", "PHPToolkit/soapclient");
 

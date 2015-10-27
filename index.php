@@ -49,12 +49,16 @@ session_start();
            .$record->LastName." ".$record->Phone."<br/>\n";
         }
         */
-        $query = "SELECT  ID,Date_Reported__c,Title__c FROM Product_Experience_Report__c";
+        $query = "SELECT  ID,Date_Reported__c,Title__c,Account__r.Name,Patient__r.Name FROM Product_Experience_Report__c";
         $response = $mySforceConnection->query($query);
         echo "Results of query '$query'<br/><br/>\n";
         foreach ($response->records as $record) {
-            echo $record->Id.": ".$record->Title__c." "
-           .$record->Date_Reported__c."<br/>\n";
+            echo "Id: ".$record->Id;
+            echo "  Title: ".$record->Title__c;
+            echo "  Center: ". $record->Account__r->Name; 
+            echo "  Patient:  ". $record->Patient__r->Name;
+            echo "  Date: ".$record->Date_Reported__c."<br/>\n";
+           echo "<br>";
         }
 
 

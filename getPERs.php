@@ -14,9 +14,10 @@ session_start();
 
             require_once ('PHPToolkit/soapclient/SforcePartnerClient.php');
             require_once ('PHPToolkit/soapclient/SforceEnterpriseClient.php');
-    define("USERNAME", "***");
-    define("PASSWORD", "***");
-    define("SECURITY_TOKEN", "***");
+
+            define("USERNAME", "***");
+            define("PASSWORD", "***");
+            define("SECURITY_TOKEN", "***");
 
             try {
                 echo "<table border=\"1\"><tr><td>";
